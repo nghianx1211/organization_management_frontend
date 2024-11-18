@@ -21,5 +21,11 @@ class EmployeeService{
         return axios.delete(BASE_URL +"/" +id);
     }
 
+    /** Method to upload a file */
+    uploadFile(formData) {
+        return axios.post(`http://localhost:8081/files`, formData);
+    }
+
+
 }
 export default new EmployeeService();

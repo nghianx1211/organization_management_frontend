@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import EmployeeService from '../service/EmployeeService';
+import FileUpload from './FileUpload';
 
 const ListEmployeeComponent = () => {
     const [employeeArray, setEmployeeArray] = useState([]);
@@ -24,6 +25,7 @@ const ListEmployeeComponent = () => {
     return (
         <div className='container'>
             <Link to={"/add-employee"} className='btn btn-primary mb-2 mt-3' href="">Add Employee</Link>
+            <FileUpload/>
             <h2 className='text-center mb-4'>List Employee</h2>
             <table className='table table-bordered table striped'>
                 <thead>
