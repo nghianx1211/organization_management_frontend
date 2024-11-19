@@ -1,0 +1,8 @@
+name: "organization_management"
+
+services:
+  frontend:
+    image: meanori/organization-management-frontend
+    container_name: frontend
+    ports:
+      - "80:80"
