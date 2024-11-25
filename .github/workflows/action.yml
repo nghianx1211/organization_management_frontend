@@ -69,7 +69,7 @@ jobs:
         ssh -T ${{ secrets.SSH_USER }}@frontend << 'EOF'
           docker pull ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}
           sudo docker compose down
-          sudo docker compose --env-file .env up -d
+          sudo docker compose up -d
         EOF
     - name: Clean key pairs
       if: always()
