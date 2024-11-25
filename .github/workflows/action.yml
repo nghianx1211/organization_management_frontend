@@ -40,7 +40,7 @@ jobs:
         chmod 400 ~/.ssh/bastion_host_key_pair.pem
         
         echo "${{ secrets.EC2_FRONTEND_KEY_PAIR }}" > ~/.ssh/frontend_key_pair.pem
-        chmod 400 ~/.ssh/backend_key_pair.pem
+        chmod 400 ~/.ssh/frontend_key_pair.pem
 
     - name: Configure SSH
       run: |
