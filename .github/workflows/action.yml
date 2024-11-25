@@ -58,9 +58,6 @@ jobs:
             IdentityFile ~/.ssh/frontend_key_pair.pem
             ProxyJump bastion-host
         " > ~/.ssh/config
-    - name: Copy .env file 
-      run:
-          scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null .env ${{ secrets.SSH_USER }}@frontend:.env
 
     - name: Copy docker-compose.yml
       run: |
