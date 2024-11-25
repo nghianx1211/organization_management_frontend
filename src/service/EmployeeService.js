@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = `http://localhost:8081/employee`
+const BASE_URL = `http://localhost:8080/employee`
 class EmployeeService{
 
     //**Method to get all employee from our api or database */
@@ -23,7 +23,7 @@ class EmployeeService{
 
     /** Method to upload a file */
     uploadFile(formData) {
-        return axios.post(`http://localhost:8081/files`, formData);
+        return axios.post(`http://localhost:8080/files`, formData);
     }
 
 
