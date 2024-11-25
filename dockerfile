@@ -16,8 +16,11 @@ COPY . .
 # Build the React application
 RUN npm run build
 
-# Stage 2: Serve the React app with nginx
+# Step 2: Set up Nginx to serve the React app
 FROM nginx:alpine
+
+# Copy the custom Nginx configuration file
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy the built React app from the build stage
 COPY --from=build /app/build /usr/share/nginx/html
