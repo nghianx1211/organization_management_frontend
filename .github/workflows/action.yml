@@ -24,10 +24,10 @@ jobs:
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      run: docker login  --build-arg REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       
     - name: Run docker build
-      run: docker build --no-cache -t ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }} .
+      run: docker build --build-arg REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} --no-cache -t ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }} .
 
     - name: push to docker hub
       run: docker push ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}
