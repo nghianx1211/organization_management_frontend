@@ -13,7 +13,7 @@ env:
   DOCKER_TAG: ${{ github.sha }}
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -32,46 +32,18 @@ jobs:
     - name: push to docker hub
       run: docker push ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}
 
-        
-    - name: Set up SSH key
-      run: |
-        mkdir -p ~/.ssh/
-        echo "${{ secrets.EC2_BASTION_HOST_KEY_PAIR }}" > ~/.ssh/bastion_host_key_pair.pem
-        chmod 400 ~/.ssh/bastion_host_key_pair.pem
-        
-        echo "${{ secrets.EC2_FRONTEND_KEY_PAIR }}" > ~/.ssh/frontend_key_pair.pem
-        chmod 400 ~/.ssh/frontend_key_pair.pem
+  deploy:
+    runs-on: self-hosted
 
-    - name: Configure SSH
-      run: |
-        echo "
-        StrictHostKeyChecking no
-        UserKnownHostsFile=/dev/null
-        Host bastion-host
-            HostName ${{ secrets.EC2_BASTION_HOST_IP }}
-            User ${{ secrets.SSH_USER }}
-            IdentityFile ~/.ssh/bastion_host_key_pair.pem
-        
-        Host frontend
-            HostName ${{ secrets.EC2_FRONTEND_IP }}
-            User ${{ secrets.SSH_USER }}
-            IdentityFile ~/.ssh/frontend_key_pair.pem
-            ProxyJump bastion-host
-        " > ~/.ssh/config
+    needs: build
 
-    - name: Copy docker-compose.yml
-      run: |
-          scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null docker-compose.yml ${{ secrets.SSH_USER }}@frontend:docker-compose.yml
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
 
+    - name: Pull docker image
+      run: sudo docker pull ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}
 
-    - name: Deploy to EC2
-      run: |
-        ssh -T ${{ secrets.SSH_USER }}@frontend << 'EOF'
-          sudo docker pull ${{ env.DOCKER_IMAGE }}
-          sudo docker compose down
-          sudo docker compose up -d
-        EOF
-    - name: Clean key pairs
-      if: always()
-      run: |
-        rm -f ~/.ssh/bastion_host_key_pair.pem ~/.ssh/frontend_key_pair.pem
+    - name: Run docker compose up
+      run: sudo docker compose up -d
+
