@@ -31,23 +31,7 @@ jobs:
 
     - name: Tag Docker image as latest
       run: |
-        docker tag ${{ env.DOCKER_IMAGE }}:${{ github.sha }} ${{ env.DOCKER_IMAGE }}:latest
+        docker tag ${{ env.DOCKER_IMAGE }}:${{ github.sha }} ${{ env.DOCKER_IMAGE }}:dev
 
     - name: push to docker hub
       run: docker push ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}
-
-  deploy:
-    runs-on: self-hosted
-
-    needs: build
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Pull docker image
-      run: sudo docker pull ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}
-
-    - name: Run docker compose up
-      run: sudo docker compose up -d
-
