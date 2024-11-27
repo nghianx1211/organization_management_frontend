@@ -43,7 +43,7 @@ jobs:
 
     - name: push to docker hub with tag dev
       run: docker push ${{ env.DOCKER_IMAGE }}:dev
-  
+    
   deploy-production:
     name: Deploy to production
     if: startsWith(github.event_name, 'release')
