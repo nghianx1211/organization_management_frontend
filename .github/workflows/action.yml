@@ -32,18 +32,18 @@ jobs:
     - name: push to docker hub
       run: docker push ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}
 
-  # deploy:
-  #   runs-on: self-hosted
+  deploy:
+    runs-on: self-hosted
 
-  #   needs: build
+    needs: build
 
-  #   steps:
-  #   - name: Checkout code
-  #     uses: actions/checkout@v3
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-  #   - name: Pull docker image
-  #     run: sudo docker pull ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}
+    - name: Pull docker image
+      run: sudo docker pull ${{ env.DOCKER_IMAGE }}:latest
 
-  #   - name: Run docker compose up
-  #     run: sudo docker compose up -d
+    - name: Run docker compose up
+      run: sudo docker compose up -d
 
