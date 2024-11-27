@@ -25,34 +25,41 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: login to docker hub
+    - name: Log in to Docker Hub
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-      
-    - name: Run docker build
-      run: docker build --build-arg REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} --no-cache -t ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }} .
+      run: |
+        echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+
+    - name: Run Docker build
+      run: |
+        docker build --build-arg REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} --no-cache -t ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }} .
 
     - name: Tag Docker image as dev
       run: |
         docker tag ${{ env.DOCKER_IMAGE }}:${{ github.sha }} ${{ env.DOCKER_IMAGE }}:dev
 
-    - name: push to docker hub with tag github commit
-      run: docker push ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}
+    - name: Push to Docker Hub with commit tag
+      run: |
+        docker push ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}
 
-    - name: push to docker hub with tag dev
-      run: docker push ${{ env.DOCKER_IMAGE }}:dev
+    - name: Push to Docker Hub with dev tag
+      run: |
+        docker push ${{ env.DOCKER_IMAGE }}:dev
     
   deploy-production:
     name: Deploy to production
     if: startsWith(github.event_name, 'release')
-    
     runs-on: self-hosted
 
+    steps:
     - name: Get Release Tag
-        id: get-tag
-        run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+      id: get-tag
+      run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
-    - name: deploy to production
-      run: sudo docker pull ${{ env.DOCKER_IMAGE }}:${{ env.TAG }}
+    - name: Deploy to production
+      run: |
+        sudo docker pull ${{ env.DOCKER_IMAGE }}:${{ env.TAG }}
+        # Add your deployment commands here, e.g.:
+        # sudo docker run -d ${{ env.DOCKER_IMAGE }}:${{ env.TAG }}
