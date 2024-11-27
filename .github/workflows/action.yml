@@ -29,7 +29,7 @@ jobs:
     - name: Run docker build
       run: docker build --build-arg REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} --no-cache -t ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }} .
 
-    - name: Tag Docker image as latest
+    - name: Tag Docker image as dev
       run: |
         docker tag ${{ env.DOCKER_IMAGE }}:${{ github.sha }} ${{ env.DOCKER_IMAGE }}:dev
 

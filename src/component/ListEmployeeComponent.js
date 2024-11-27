@@ -26,7 +26,7 @@ const ListEmployeeComponent = () => {
         <div className='container'>
             <Link to={"/add-employee"} className='btn btn-primary mb-2 mt-3' href="">Add Employee</Link>
             <FileUpload/>
-            <h2 className='text-center mb-4'>List Employee test watchtower</h2>
+            <h2 className='text-center mb-4'>List Employee TEST WATCHTOWER WORK</h2>
             <table className='table table-bordered table striped'>
                 <thead>
                     <th>Employee ID</th>
