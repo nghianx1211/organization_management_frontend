@@ -39,6 +39,7 @@ jobs:
 
       - name: tag and push to docker hub
         run: |
+          docker pull ${{ env.DOCKER_IMAGE }}:${{ env.COMMIT_HASH }}
           docker tag ${{ env.DOCKER_IMAGE }}:${{ env.COMMIT_HASH }} ${{ env.DOCKER_IMAGE }}:prod
           docker push ${{ env.DOCKER_IMAGE }}:prod
     
