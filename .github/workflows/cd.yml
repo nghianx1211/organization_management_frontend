@@ -1,29 +1,58 @@
+# on:
+#   release:
+#     types:
+#       - published
+
+# env:
+#   DOCKER_IMAGE: meanori/organization-management-frontend
+#   DOCKER_TAG: ${{ github.sha }}
+
+# jobs:
+#   deploy-production:
+#     name: Deploy to production
+#     runs-on: self-hosted
+
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
+
+#       - name: Get commit hash for the release tag
+#         run: |
+#           echo "GITHUB_REF: $GITHUB_REF"
+#           # Extract the tag name from the GITHUB_REF variable
+#           tag_name=${GITHUB_REF#refs/tags/}
+#           echo "Tag name: $tag_name"
+
+#           # Get the commit hash associated with the tag
+#           commit_hash=$(git show-ref -s $tag_name)
+#           echo "Commit hash for tag $tag_name: $commit_hash"
+
+name: Get Commit Hash from Git Tag
+
 on:
   release:
     types:
       - published
 
-env:
-  DOCKER_IMAGE: meanori/organization-management-frontend
-  DOCKER_TAG: ${{ github.sha }}
-
 jobs:
-  deploy-production:
-    name: Deploy to production
-    if: startsWith(github.event_name, 'release')
+  get_commit_hash:
     runs-on: self-hosted
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Ensure all commit history and tags are fetched
+
+      - name: Fetch all tags (if necessary)
+        run: git fetch --tags
 
       - name: Get commit hash for the release tag
         run: |
           echo "GITHUB_REF: $GITHUB_REF"
           # Extract the tag name from the GITHUB_REF variable
-          tag_name=${GITHUB_REF#refs/tags/}
+          tag_name=$(basename $GITHUB_REF)
           echo "Tag name: $tag_name"
 
           # Get the commit hash associated with the tag
-          commit_hash=$(git show-ref -s $tag_name)
+          commit_hash=$(git rev-list -n 1 $tag_name)
           echo "Commit hash for tag $tag_name: $commit_hash"
