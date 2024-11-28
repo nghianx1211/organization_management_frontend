@@ -44,9 +44,6 @@ jobs:
       - name: Verify Git repository
         run: git status
 
-      - name: Fetch all tags (if necessary)
-        run: git fetch --tags
-
       - name: Get commit hash for the release tag
         run: |
           echo "GITHUB_REF: $GITHUB_REF"
