@@ -26,7 +26,7 @@ jobs:
         run: |
           echo "GITHUB_REF: $GITHUB_REF"
           # Extract the tag name from the GITHUB_REF variable
-          tag_name=$(basename $GITHUB_REF)
+          tag_name=${GITHUB_REF#refs/tags/}
           echo "Tag name: $tag_name"
 
           # Get the commit hash associated with the tag
