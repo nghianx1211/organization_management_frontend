@@ -1,0 +1,23 @@
+# on:
+#   release:
+#     types:
+#       - published
+
+# env:
+#   DOCKER_IMAGE: meanori/organization-management-frontend
+#   DOCKER_TAG: ${{ github.sha }}
+
+# jobs:
+#   deploy-production:
+#     name: Deploy to production
+#     if: startsWith(github.event_name, 'release')
+#     runs-on: self-hosted
+
+#     steps:
+#     - name: Get Release Tag
+#       id: get-tag
+#       run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+#     - name: Deploy to production
+#       run: |
+#         sudo docker pull ${{ env.DOCKER_IMAGE }}:${{ env.TAG }}
