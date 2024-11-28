@@ -10,7 +10,7 @@ env:
 
 jobs:
   get_commit_hash:
-    runs-on: ubtuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
