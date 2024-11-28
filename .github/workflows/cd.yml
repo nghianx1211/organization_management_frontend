@@ -1,33 +1,4 @@
-# on:
-#   release:
-#     types:
-#       - published
-
-# env:
-#   DOCKER_IMAGE: meanori/organization-management-frontend
-#   DOCKER_TAG: ${{ github.sha }}
-
-# jobs:
-#   deploy-production:
-#     name: Deploy to production
-#     runs-on: self-hosted
-
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v3
-
-#       - name: Get commit hash for the release tag
-#         run: |
-#           echo "GITHUB_REF: $GITHUB_REF"
-#           # Extract the tag name from the GITHUB_REF variable
-#           tag_name=${GITHUB_REF#refs/tags/}
-#           echo "Tag name: $tag_name"
-
-#           # Get the commit hash associated with the tag
-#           commit_hash=$(git show-ref -s $tag_name)
-#           echo "Commit hash for tag $tag_name: $commit_hash"
-
-name: Get Commit Hash from Git Tag
+name: Release and push to docker with tag prod
 
 on:
   release:
@@ -39,13 +10,10 @@ env:
 
 jobs:
   get_commit_hash:
-    runs-on: self-hosted
+    runs-on: ubuntu-lastest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      
-      - name: Verify Git repository
-        run: git status
 
       - name: Get commit hash for the release tag
         run: |
@@ -59,7 +27,16 @@ jobs:
           echo "Commit hash for tag $tag_name: $commit_hash"
           echo "COMMIT_HASH=${commit_hash}" > $GITHUB_ENV
 
-      - name: Pull docker image
-        run: sudo docker pull ${{ env.DOCKER_IMAGE }}:${{ env.COMMIT_HASH }}
+      - name: Log in to Docker Hub
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+
+      - name: Tag Docker image as dev
+        run: |
+          docker tag ${{ env.DOCKER_IMAGE }}:${{ env.COMMIT_HASH }} ${{ env.DOCKER_IMAGE }}:prod
+          docker push ${{ env.DOCKER_IMAGE }}:prod
 
 
