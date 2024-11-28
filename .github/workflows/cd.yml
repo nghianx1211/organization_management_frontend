@@ -34,6 +34,9 @@ on:
     types:
       - published
 
+env:
+  DOCKER_IMAGE: meanori/organization-management-frontend
+
 jobs:
   get_commit_hash:
     runs-on: self-hosted
