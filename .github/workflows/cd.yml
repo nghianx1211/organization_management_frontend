@@ -1,23 +1,34 @@
-# on:
-#   release:
-#     types:
-#       - published
+on:
+  release:
+    types:
+      - published
 
-# env:
-#   DOCKER_IMAGE: meanori/organization-management-frontend
-#   DOCKER_TAG: ${{ github.sha }}
+env:
+  DOCKER_IMAGE: meanori/organization-management-frontend
+  DOCKER_TAG: ${{ github.sha }}
 
-# jobs:
-#   deploy-production:
-#     name: Deploy to production
-#     if: startsWith(github.event_name, 'release')
-#     runs-on: self-hosted
+jobs:
+  deploy-production:
+    name: Deploy to production
+    if: startsWith(github.event_name, 'release')
+    runs-on: self-hosted
 
-#     steps:
-#     - name: Get Release Tag
-#       id: get-tag
-#       run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+    steps:
+    # - name: Get Release Tag
+    #   id: get-tag
+    #   run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
-#     - name: Deploy to production
-#       run: |
-#         sudo docker pull ${{ env.DOCKER_IMAGE }}:${{ env.TAG }}
+    # - name: Deploy to production
+    #   run: |
+    #     sudo docker pull ${{ env.DOCKER_IMAGE }}:${{ env.TAG }}
+
+      - name: Get commit hash for the release tag
+        run: |
+          echo "GITHUB_REF: $GITHUB_REF"
+          # Extract the tag name from the GITHUB_REF variable
+          tag_name=$(basename $GITHUB_REF)
+          echo "Tag name: $tag_name"
+
+          # Get the commit hash associated with the tag
+          commit_hash=$(git rev-list -n 1 $tag_name)
+          echo "Commit hash for tag $tag_name: $commit_hash"
