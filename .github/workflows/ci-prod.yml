@@ -37,7 +37,7 @@ jobs:
         run: |
           echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
 
-      - name: tag and push to docker hub
+      - name: add tag prod for exist image and push to docker hub
         run: |
           docker pull ${{ env.DOCKER_IMAGE }}:${{ env.COMMIT_HASH }}
           docker tag ${{ env.DOCKER_IMAGE }}:${{ env.COMMIT_HASH }} ${{ env.DOCKER_IMAGE }}:prod
