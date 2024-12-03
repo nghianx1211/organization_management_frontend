@@ -28,8 +28,9 @@ jobs:
           # Get the commit hash associated with the tag
           commit_hash=$(git rev-list -n 1 $tag_name)
           echo "Commit hash for tag $tag_name: $commit_hash"
-          echo "COMMIT_HASH=${commit_hash}" > $GITHUB_ENV
-          echo "TAG=${tag_name}" > $GITHUB_ENV
+          echo "COMMIT_HASH=${commit_hash}" >> $GITHUB_ENV
+          echo "TAG=${tag_name}" >> $GITHUB_ENV
+
 
       - name: Log in to Docker Hub
         env:
